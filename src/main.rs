@@ -2,7 +2,7 @@
 extern crate lazy_static;
 
 use anyhow::{anyhow, Result};
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Arc};
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 #[repr(u8)]
@@ -15,18 +15,18 @@ type Instructions = Vec<OpCode>;
 
 #[derive(Debug, Clone)]
 struct Definition {
-    name: &'static str,
+    name: Arc<&'static str>,
 
     // Number of bytes each operand takes
-    operand_widths: Vec<usize>,
+    operand_widths: Arc<[usize]>,
 }
 
 lazy_static! {
     static ref DEFINITIONS: HashMap<Op, Definition> = vec![(
         Op::Constant,
         Definition {
-            name: "OpConstant",
-            operand_widths: vec![2],
+            name: Arc::new("OpConstant"),
+            operand_widths: Arc::new([2]),
         },
     )]
     .into_iter()
